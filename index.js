@@ -2,14 +2,18 @@ const express = require('express')
 const app = express()
 const os = require('os')
 
-// Read every folder in the homedir recursively
-const fs = require('fs')
-const path = require('path')
-const homedir = os.homedir()
-const files = fs.readdirSync(homedir)
+function runningWithRootRights() {
+    return process.getuid && process.getuid() === 0 ? true : false
+}
 
 app.get('/', (req, res) => {
-  res.json(files)
+    if (runningWithRootRights()) {
+        res.send('<h1>Hello, root!</h1>')
+    } else {
+        res.send('<h1>Hello, user!</h1>')
+    }
 })
 
-app.listen(8080)
+app.listen(8080, () => {
+    console.log(`⚡️  Server is running on port 8080 on ${os.hostname()}`)
+})
