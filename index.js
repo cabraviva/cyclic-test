@@ -2,19 +2,14 @@ const express = require('express')
 const app = express()
 const os = require('os')
 
+// Read every folder in the homedir recursively
+const fs = require('fs')
+const path = require('path')
+const homedir = os.homedir()
+const files = fs.readdirSync(homedir)
+
 app.get('/', (req, res) => {
-    res.send(JSON.stringify({
-        totalRAM: os.totalmem(),
-        freeRAM: os.freemem(),
-        hostname: os.hostname(),
-        platform: os.platform(),
-        release: os.release(),
-        type: os.type(),
-        uptime: os.uptime(),
-        loadAvg: os.loadavg(),
-        networkInterfaces: os.networkInterfaces(),
-        userInfo: os.userInfo()
-    }, null, 2))
+  res.json(files)
 })
 
 app.listen(8080)
